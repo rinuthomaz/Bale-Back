@@ -1,0 +1,640 @@
+ <div class="background-static"></div> 
+<div class="ContentMainContainer">
+	<div class="custom_tab">
+		
+		<div class="tab_heading">
+			<ul >
+			<li ng-class="{ active: detailedActivityReportTab }">
+					<a href ng-click="detailedActivityReportTab=true;incidentReportTab=false;pendingStoreReportTab=false;rmtReportTab=false">DETAILED ACTIVITY REPORT</a>
+			</li>
+			<li ng-class="{ active: rmtReportTab }">
+					<a href ng-click="rmtReportTab=true;detailedActivityReportTab=false;pendingStoreReportTab=false">RMT IMPORT REPORT</a>
+			</li>
+			<li ng-class="{ active: pendingStoreReportTab }">
+					<a href ng-click="pendingStoreReportTab=true;incidentReportTab=false;detailedActivityReportTab=false;rmtReportTab=false;">PENDING STORE REPORT</a>
+			</li>
+			
+		</ul>
+		</div>
+
+		<div class="tab-container">
+			<div class="tab_panel" ng-show="detailedActivityReportTab">
+
+				<div class="filter-block">
+				<!--<div class="filter_title">FILTER
+				
+				</div>-->
+				<div class="form-group">
+					<div class="form-field mr10 report-filter-width">
+						<label class="select_label"><span>Select Buy Customer</span> 
+						<select
+							class="select-field h56 " ng-model="buyCustomerSelected"
+							ng-change="getBuyCustomerDetails(buyCustomerSelected);checkSubmitBtn()"
+							ng-options="customer.customerName for customer in buyCustomers">
+								<option value="">Please Select</option>
+						</select></label>
+					</div>
+					<div class="form-field mr10 reportDate-width">
+									<label class="select_label"><span>Start Date</span>
+									 <div class="input-group date-field" ng-click="StartDateFun()">
+									  <input type="text" ng-model="startDate" class="input-field" placeholder="Start Date" datepicker-append-to-body="true" uib-datepicker-popup="MM-dd-yyyy" ng-model="dtStart" is-open="StartDate.opened" show-button-bar="false" datepicker-options="dateOptionsStart" close-text="Close" ng-click="StartDateFun()" ng-change="checkSubmitBtn()">
+									  <i class="date-icon glyphicon glyphicon-calendar"></i>
+									</div>
+									</label>
+								</div>
+								<div  class="spinner-overlay" ng-show="loaderDetailedReport" style="padding-bottom:20px">  
+                    <div class="loader-inner"><i  class="fa fa-spin fa-circle-o-notch"></i> Loading ... </div></div>
+								
+								
+											
+								
+					<div class="form-field mr10 reportDate-width">
+									<label class="select_label"><span>End Date</span>
+									 <div class="input-group date-field" ng-click="EndDateFun();">
+									  <input type="text"  ng-model="endDate" class="input-field" placeholder="End Date" datepicker-append-to-body="true" uib-datepicker-popup="MM-dd-yyyy" ng-model="dtEnd" is-open="EndDate.opened" show-button-bar="false" datepicker-options="dateOptionsss" close-text="Close" ng-click="EndDateFun()" ng-change="checkSubmitBtn()">
+									  <i class="date-icon glyphicon glyphicon-calendar"></i>
+									</div>
+									</label>
+								</div>
+								
+					<div class="form-field search-control" style="float: right;">
+							<input type="text" class="input-field search-field" 
+							ng-model="searchReportGrid" placeholder="Search" title="Search by Trip Id">
+							
+							<button class="btn-search" title="Search"><i class="fa fa-search" aria-hidden="true"></i></button>
+						</div>			
+								
+								</div>
+					
+					<div class="form-field mr10 report-filter-width" >
+						<label class="select_label"><span>Select Supplier
+								</span> <select class="select-field h56 w130"
+							ng-model="supplierSelected" ng-change="checkSubmitBtn()"
+							ng-options="supplier.description for supplier in suppliersForCustomerSelected | orderBy : 'description'">
+								<option value="">Please Select</option>
+						</select></label>
+					</div>
+
+					
+					
+					
+								
+								
+					<div class="form-field mr10 report-filter-width incytype" >
+						<label class="select_label"><span>Select Incident Type</span> 
+						<select class="select-field h56 "
+							ng-model="incidentSelected"
+							ng-options="incident.incidentDescription for incident in incidentTypes">
+						<option value="">Please Select</option>
+				
+						<!--<option value="{{selectAllIncidentTypeObj}}"><input type="checkbox" class="" ng-model="selectAllIncident"></>Select All</option>-->
+															
+						</select></label>
+						
+			<!--		<div class="custom-check selectall-inctype">
+                                    <span>Select All</span>
+                                    <input type="checkbox"ng-model="selectAllIncident" id="selectall">
+                                    <label for="selectall"></label>
+                                </div>-->
+						<!--<div class="selectall-inctype custom-check"> <input type="checkbox" id="selectall" ng-model="selectAllIncident">Select All</div>-->
+					</div>
+					
+					
+					
+					
+					
+				
+
+				
+					<div class="form-field mr10 submiticon">
+						<button class="btn btn-field btn-green submit-btn h56 report-button iconcolor" ng-disabled="disableSubmitBtn" title="Go"
+
+							ng-click="getBalePickups(buyCustomerSelected,supplierSelected,incidentSelected,startDate,endDate)">
+							<i class="fa fa-angle-right"></i></button>
+					</div>
+					<!--<div class="form-field mr0">
+						<button class="btn_image btn_recet" type="button">
+							<img src="/brta/app/resources/images/recet.png">
+						</button>
+					</div>-->
+					
+					<div class="form-field mr0 pull-right">
+						 <!-- <span>Report With:</span> -->
+						 <!--<span>Report With:</span>-->
+						 <button ng-click="reportPdf()" class="btn_image btn_pdf" type="button">
+						 <a class="reportwith"><img src="/brta/app/resources/images/pdf.png" title="Pdf"></a>
+						 </button>
+						 <button ng-click="reportExcel()" class="btn_image btn_pdf" type="button">
+						 <a class="reportwith"><img src="/brta/app/resources/images/excel.png" title="Excel"></a>
+						 </button>
+						 </div>
+			
+</div>
+
+				
+
+				<div  class="custom_table scroll-table table-scroll">
+				
+					<table>
+						<tr class="table_form form-field nowrap">
+							<th class="tr_width">Sr#</th>
+							<th class="tr_width">Trip Id</th>
+				            <th class="tr_width">Store Name</th>
+				            
+				            <th class="tr_width">Sell Customer Site</th>
+							 <th class="tr_width">Driver Name</th>
+							<th class="tr_width">Service Provider </th>	
+				            <th class="tr_width">Incident  </td>
+				            <th class="tr_width">Incident Comments</th>
+							<th class="tr_width">Pickup Date</th>
+				            <th class="tr_width"> Bales Picked</th>
+				            
+				           
+				            <th class="tr_width">Bales Remaining</th>
+							<!--<th>No.Of Bales Picked * Avg Bale Weight  </th>-->
+							<!--<th class="tr_width">Bales Avg Weight In Tones</th>-->
+					<!--	<th class="tr_width">Incident Picture</th>-->
+							<!-- <th class="tr_width">Bale Avg Weight in LBS</th>
+							<th class="tr_width">Weight</th> -->
+							<!--<th class="tr_width"></th>-->
+						</tr>
+
+						<tr
+							dir-paginate="balePickup in balePickupList |filter:searchReportGrid| itemsPerPage:pageSize"
+							class="tr_width table_form form-field" current-page="currentPage"
+							pagination-id="detailedTable">
+							
+							 <td>
+							<div >{{($index +1)+ (currentPage-1)* pageSize }}</div>
+									
+							</td>
+							
+							<td>
+								<div >{{balePickup.loadTripId}}</div>
+								
+							</td>
+							
+							<td>
+								<div >{{balePickup.buyCustomerSiteName}}</div>
+								
+							</td>
+							
+							
+							
+							<td>
+								<div >{{balePickup.sellCustomerSiteName}}</div>
+								
+							</td>
+							<td>
+								<div >{{balePickup.tripDriverFirstName}} {{balePickup.tripDriverLastName}}</div>
+								
+							</td>
+							
+							<td>
+								{{supplierSelected.description}}</div>
+								
+							</td>
+							
+							<td>
+								<div >{{balePickup.incidentName}}</div>
+								
+							</td>
+							
+							<td>
+								<div >{{balePickup.comments}}</div>
+								
+							</td>
+							<td>
+								<div >{{balePickup.pickupDate | date : 'MM/dd/yyyy'}}</div>
+								
+							</td>
+							
+							
+							<td>
+								<div >{{balePickup.balesPicked}}</div>
+								
+							</td>
+							
+							
+							
+							
+							<td>
+								<div >{{balePickup.balesRemaining}}</div>
+								
+							</td>
+					<!--		<td> <input type='file' ng-model='pickup.uploadFile' accept="image/*" multiple  base-sixty-four-input> </td>-->
+							
+							<!--<td>
+							
+								<div >{{balePickup.avgBaleWeight*balePickup.balesPicked}}</div>
+								
+							</td>-->
+					</table>
+				</div>
+				<div id="detailedReportDiv" style="display:none">
+					<table id="detailedReportTable">
+						<tr>
+							<th>Sr#</th>
+							<th>Trip Id</th>
+				            <th>Store Name</th>
+				            <th>Sell Customer Site</th>
+				           <th>Driver Name</th>
+							<th>Service Provider </th>
+				            <th>Incident  </th>
+				            <th>Incident Comments</th>
+							  <th>Pickup Date</th>
+				            <th> Bales Picked</th>
+							<th> Bales Remaining</th>
+							<!--<th>No.Of Bales Picked * Avg Bale Weight</th>-->
+				 <!-- 	        <th>Incident Picture</th>-->
+						</tr>
+						<tr ng-repeat="balePickup in balePickupList">
+							 <td>{{($index +1)}}</td>
+							
+							<td>{{balePickup.loadTripId}}</td>
+							<td>{{balePickup.buyCustomerSiteName}}</td>
+							<td>{{balePickup.sellCustomerSiteName}}</td>
+							<td>{{balePickup.tripDriverFirstName}} {{balePickup.tripDriverLastName}}</td>
+							<td>{{supplierSelected.description}}</td>
+							<td>{{balePickup.incidentName}}</td>
+						    <td>{{balePickup.comments}}</td>
+							 <td>{{balePickup.pickupDate | date : 'MM/dd/yyyy'}}</td>
+							 <td>{{balePickup.balesPicked}}</td>
+							  <td>{{balePickup.balesRemaining}}</td>
+							  <!--<td>{{balePickup.avgBaleWeight*balePickup.balesPicked}}</td>-->
+	<!--    <td>{{balePickup.buyCustomerTelNo}}</td>-->
+							<!--<td>{{balePickup.incidentName}}</td>
+							<td>{{balePickup.comments}}</td>
+							<td>{{balePickup.balesPicked}}</td>
+						    <td>{{balePickup.pickupDate | date : 'MM/dd/yyyy'}}</td>
+	                        <div >{{balePickup.avgBaleWeight*balePickup.balesPicked}}</div>
+							<td>{{balePickup.balesRemaining}}</td>-->
+		                   <!-- <td>{{balePickup.avgBaleWeight*balePickup.balesPicked}}</td>-->
+						</tr>
+					</table>
+					</div>
+				<div class="custom_pagination pagination_wrapper">
+					<dir-pagination-controls pagination-id="detailedTable" on-page-change="pageChangeHandler(newPageNumber)"
+						boundary-links="true"></dir-pagination-controls>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+			<div class="tab_panel" ng-show="rmtReportTab">
+
+				<div class="filter-block">
+				<!--<div class="filter_title">FILTER
+				<div class="form-field search-control" style="float: right;">
+					<input type="text" class="input-field search-field ng-pristine ng-untouched ng-valid ng-empty" ng-model="searchTextRMTReportGrid" placeholder="Search User ">
+					<button class="btn-search"><i class="fa fa-search" aria-hidden="true"></i></button>
+				 </div>
+				</div>-->
+				<div class="form-group">
+					<div class="form-field mr10 report-filter-width">
+						<label class="select_label"><span>Select Buy Customer</span> 
+						<select
+							class="select-field h56" ng-model="buyCustomerSelectedRMT"
+							ng-change="getBuyCustomerDetails(buyCustomerSelectedRMT);checkSubmitBtn()"
+							ng-options="customer.customerName for customer in buyCustomers | orderBy:'customerName' ">
+								<option value="">Please Select</option>
+						</select></label>
+					</div>
+					
+					<div class="form-field mr10 reportDate-width">
+									<label class="select_label"><span>Start Date</span>
+									 <div class="input-group date-field" ng-click="StartDateFunRMT()">
+									  <input type="text" ng-model="startDateRMT" class="input-field" placeholder="Start Date" datepicker-append-to-body="true" uib-datepicker-popup="MM-dd-yyyy" ng-model="dtStart" is-open="StartDateRMT.opened" show-button-bar="false" datepicker-options="dateOptionsStart" close-text="Close" ng-click="StartDateFunRMT()" ng-change="checkSubmitBtn()">
+									  <i class="date-icon glyphicon glyphicon-calendar"></i>
+									</div>
+									</label>
+								</div>
+								<div  class="spinner-overlay" ng-show="loaderRmtReport" style="padding-bottom:20px">  
+                    <div class="loader-inner"><i  class="fa fa-spin fa-circle-o-notch"></i> Loading ... </div></div>
+								
+								
+					<div class="form-field mr10 reportDate-width">
+									<label class="select_label"><span>End Date</span>
+									 <div class="input-group date-field" ng-click="EndDateFunRMT();">
+									  <input type="text"  ng-model="endDateRMT" class="input-field" placeholder="End Date" datepicker-append-to-body="true" uib-datepicker-popup="MM-dd-yyyy" ng-model="dtEnd" is-open="EndDateRMT.opened" show-button-bar="false" datepicker-options="dateOptionsEnd" close-text="Close" ng-click="EndDateFunRMT()" ng-change="checkSubmitBtn()">
+									  <i class="date-icon glyphicon glyphicon-calendar"></i>
+									</div>
+									</label>
+								</div>
+								</div>
+								<div class="form-field mr10 report-filter-width" >
+						<label class="select_label"><span>Select Supplier
+								</span> <select class="select-field h56 w130"
+							ng-model="supplierSelectedRMT"ng-change="checkSubmitBtn()"
+							ng-options="supplier.description for supplier in suppliersForCustomerSelected | orderBy : 'description'">
+								<option value="">Please Select</option>
+						</select></label>
+					</div>
+<div class="form-field mr10 submiticon">
+						<button class="btn btn-field btn-green submit-btn h56 report-button iconcolor" ng-disabled="disableSubmitBtnRMT" title="Go"
+							ng-click="getBalePickupsRMT(buyCustomerSelectedRMT,supplierSelectedRMT, startDateRMT, endDateRMT)"> <i class="fa fa-angle-right"></i>
+                </button>					</div>
+					<!--<div class="form-field mr0">
+						<button class="btn_image btn_recet" type="button">
+							<img class="h56" src="/brta/app/resources/images/recet.png">
+						</button>
+					</div>-->
+			
+					
+					
+					
+			 <div class="form-field mr0 pull-right">
+						 <!---<span>Report With:</span>--> 
+						 <button class="btn_image btn_pdf" type="button" ng-click="downloadPdf()">
+						 <a class="reportwith"><img src="/brta/app/resources/images/pdf.png" title="Pdf"></a></button>
+						 <button class="btn_image btn_pdf" ng-click="downloadExcel()">
+						 <a class="reportwith"><img src="/brta/app/resources/images/excel.png" title="Excel"></a>
+						 </button>
+						 </div>
+						
+						
+
+									
+</div>
+
+
+
+
+				<div class="custom_table scroll-table table-scroll">
+					<table>
+						<tr class="table_form form-field nowrap">
+						    <th class="tr_width">Sr#</th>
+							<th class="tr_width">Date</th>
+							<th class="tr_width">Buy Customer Code</th>
+							<th class="tr_width">Sell Customer Site Code</th>
+							<th class="tr_width">Material Profile Code</th>
+							<th class="tr_width">Release No</th>
+							<th class="tr_width">Reference</th>
+							<th class="tr_width">Notes</th>
+							<th class="tr_width">Weight</th>
+							<th class="tr_width">Ex. rebate</th>
+							<th class="tr_width">Ex. Sale</th>
+							<th class="tr_width">Ex. Cost</th>
+							<th class="tr_width">Bales</th>
+							<th class="tr_width">Bales Remaining</th>
+
+						</tr>
+						
+						<tr
+							dir-paginate="balePickup in balePickupListRMT | filter:searchTextRMTReportGrid | itemsPerPage: pageSizeRMT | orderBy : 'pickupDate'"
+							class="tr_width table_form form-field" current-page="currentPageRMT"
+							pagination-id="rmtTable">
+							
+							<td>
+							<div >{{($index +1)+ (currentPageRMT-1)* pageSizeRMT }}</div>
+									
+							</td>
+							
+							<td>
+								<div>{{balePickup.pickupDate | date : 'MM/dd/yyyy'}}</div>
+							</td>
+							
+							<td>
+						<div >{{ 	getBuyCustomerCode(balePickup) }}</div>
+						
+					
+					</td>
+
+					<td>
+				<div>{{  getSellCustomerSiteCode(balePickup) }}</div>
+											
+					</td>
+							
+							<td>
+								<div>{{balePickup.materialShortName}}</div>
+							</td>
+							
+							
+							<td>
+								<div>{{balePickup.releaseNo}}</div>
+							</td>
+							
+							
+							<td>
+								<!--<div>{{balePickup.pickupDate}}</div> -->
+							</td>
+							
+							<td>
+								<div>{{balePickup.loadTripId}}</div>
+							</td>
+							
+							<td>
+								<div>{{balePickup.balesPicked * balePickup.avgBaleWeight}}</div>
+							</td>
+							
+							<td>
+								<!--<div>{{balePickup.pickupDate}}</div> -->
+							</td>
+							
+							<td>
+								<!--<div>{{balePickup.pickupDate}}</div> -->
+							</td>
+							
+							<td>
+								<!--<div>{{balePickup.pickupDate}}</div> -->
+							</td>
+							
+							<td>
+								<div>{{balePickup.balesPicked}}</div>
+							</td>
+							
+							<td>
+								<div>{{balePickup.balesRemaining}}</div>
+							</td>
+							
+						</tr>
+					</table>
+				</div>
+				
+				<div id="rmtReportDiv" style="display:none">
+					<table id="rmtReportTable">
+						<tr>
+						    <th>Sr#</th>
+							<th>Date</th>
+							<th>Buy Customer Code</th>
+							<th>Sell Customer Site Code</th>
+							<th>Material Profile Code</th>
+							<th>Release No</th>
+							<th>Reference</th>
+							<th>Notes</th>
+							<th>Weight</th>
+							<th>Ex. rebate</th>
+							<th>Ex. Sale</th>
+							<th>Ex. Cost</th>
+							<th>Bales</th>
+							<th>Bales Remaining</th>
+						</tr>
+						<tr ng-repeat="balePickup in balePickupListRMT | orderBy : 'pickupDate'">
+						    <td>{{($index +1)}}</td>
+							<td>{{balePickup.pickupDate | date : 'MM/dd/yyyy'}}</td>
+							<td>{{ 	getBuyCustomerCode(balePickup) }}</td>							
+							<td>{{  getSellCustomerSiteCode(balePickup) }}</td>							
+							<td>{{balePickup.materialShortName}}</td>							
+							<td>{{balePickup.releaseNo}}</td>
+							<td></td>
+							<td>{{balePickup.loadTripId}}</td>
+							<td>{{balePickup.balesPicked * balePickup.avgBaleWeight}}</td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>{{balePickup.balesPicked}}</td>
+							<td>{{balePickup.balesRemaining}}</td>
+						</tr>
+					</table>
+					</div>
+				
+				<div class="custom_pagination pagination_wrapper">
+					<dir-pagination-controls pagination-id="rmtTable" on-page-change="pageChangeHandlerRMT(newPageNumber)"
+						boundary-links="true"></dir-pagination-controls>
+				</div>
+			</div>
+			
+ <div class="tab_panel" ng-show="pendingStoreReportTab">
+
+				<div class="filter-block">
+				
+				<div class="form-group">
+					<div class="form-field mr10 report-filter-width">
+						<label class="select_label pad-rmv"><span>Select Buy Customer</span> 
+						<select
+							class="select-field h56 w130" ng-model="buyCustomerSelectedPR"
+							ng-change="getBuyCustomerDetails(buyCustomerSelectedPR);checkSubmitBtn()"
+							ng-options="customer.customerName for customer in buyCustomers">
+								<option value="">Please Select</option>
+						</select></label>
+					</div>
+					<div class="form-field mr10 report-filter-width" >
+						<label class="select_label pad-rmv"><span>Select Supplier
+								</span> <select class="select-field h56 w130"
+							ng-model="supplierSelectedPR" ng-change="checkSubmitBtn()"
+							ng-options="supplier.description for supplier in suppliersForCustomerSelected | orderBy : 'description'">
+								<option value="">Please Select</option>
+						</select></label>
+					</div>
+					<div  class="spinner-overlay" ng-show="loaderPendingReport" style="padding-bottom:20px">  
+                    <div class="loader-inner"><i  class="fa fa-spin fa-circle-o-notch"></i> Loading ... </div></div>
+
+										<div class="form-field mr10 submiticon">
+						<button class="btn btn-field btn-green submit-btn h56 report-button iconcolor" ng-disabled="disableSubmitBtnPR" title="Go"
+							ng-click="getPendingBalePickups(buyCustomerSelectedPR,supplierSelectedPR)"><i class="fa fa-angle-right"></i>
+</button>	</div>
+					<!--<div class="form-field mr0">
+						<button class="btn_image btn_recet" type="button">
+							<img src="/brta/app/resources/images/recet.png">
+						</button>
+					</div>-->
+					
+					<div class="form-field mr0 pull-right">
+
+					<!--<span>Report With:</span> -->
+						 <a class="reportwith" ng-click="pendingreportPdf()"><img src="/brta/app/resources/images/pdf.png" title="Pdf"></a>
+						 <a class="reportwith" ng-click="pendingreportExcel()"><img src="/brta/app/resources/images/excel.png" title="Excel"></a>
+
+						 </div>
+				</div>
+</div>
+
+				
+
+				<div  class="custom_table scroll-table table-scroll">
+				
+					<table>
+						<tr class="table_form form-field nowrap">
+							<th class="tr_width">Sr#</th>
+				            <th class="tr_width">Store Name</th>
+				            <!--<th class="tr_width">Store ID</th>-->
+				            <th class="tr_width">Buy Customer Site</th>
+				           <!-- <th class="tr_width">Store Phone No</th>-->
+				           <!-- <th class="tr_width">Trip ID</th>-->
+				            <th class="tr_width">Driver Name</th>
+				            <th class="tr_width">Pickup Date</th>
+							<!--<th class="tr_width"></th>-->
+						</tr>
+
+						<tr
+							dir-paginate="balePickup in balePickupLists | itemsPerPage: pageSizePending"
+							class="tr_width table_form form-field" current-page="currentPagePending"
+							pagination-id="pendingTable">
+							
+							 <td>
+							<div >{{($index +1)+ (currentPagePending-1)* pageSizePending }}</div>
+							</td>
+							<td>
+								<div >{{balePickup.buyCustomerSiteName}}</div>
+							</td>
+						<!--    <td>
+								<div >{{balePickup.buyCustomerSiteId}}</div>
+							</td>-->
+							<td>
+								<div >{{balePickup.buyCustomerAddress3}},{{balePickup.buyCustomerAddress4}},{{balePickup.buyCustomerPostCode}}</div>
+							</td>
+					<!--	    <td>
+								<div >{{balePickup.buyCustomerTelNo}}</div>
+							</td>
+							 <td>
+								<div >{{balePickup.tripId}}</div>
+							</td>-->
+					 		<td>
+					 		
+							{{changeLongToStringDate(balePickup)}}
+							
+							</td>
+							
+			<!--				<td>
+							<div>
+								{{balePickup.tripDriverFirstName}} {{balePickup.tripDriverLastName}}
+							</div>
+							</td>-->
+							<td>
+								<div >{{balePickup.pickupDate | date : 'MM/dd/yyyy'}}</div>
+						 </td>
+						</tr>
+					</table>
+				</div>
+				<div id="pendingReportDiv" style="display:none">
+					<table id="pendingReportTable">
+						<tr>
+							<th>Sr#</th>
+				            <th>Store Name</th>
+				           <!-- <th>Store ID</th>-->
+				            <th>Buy Customer Site</th>
+				           <!--<th>Store Phone No</th>-->
+				          <!-- <th>Trip ID</th>-->
+				            <th>Driver Name</th>
+				            <th>Pickup Date</th>
+						</tr>
+						<tr ng-repeat="balePickup in balePickupLists">
+				            
+				            
+				            <td>{{($index +1)}}</td>
+							<td>{{balePickup.buyCustomerSiteName}}</td>
+						<!--<td>{{balePickup.buyCustomerSiteId}}</td>-->
+							<td>{{balePickup.buyCustomerAddress3}},{{balePickup.buyCustomerAddress4}},{{balePickup.buyCustomerPostCode}}</td>
+						<!--<td>{{balePickup.buyCustomerTelNo}}</td>-->
+						<!--<td>{{balePickup.tripId}}</td>-->
+							<td>{{changeLongToStringDate(balePickup)}}</td>
+							<td>{{balePickup.pickupDate | date : 'MM/dd/yyyy'}}</td>
+						</tr>
+					</table>
+					</div>
+				<div class="custom_pagination pagination_wrapper">
+					<dir-pagination-controls pagination-id="pendingTable" on-page-change="pageChangeHandlerPending(newPageNumber)"
+						boundary-links="true"></dir-pagination-controls>
+				</div>
+			</div>
+
+		</div>
+			
+			
+			
+			</div>
+		
+
+</div>
+</div>
+</div>

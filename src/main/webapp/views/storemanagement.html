@@ -1,0 +1,1402 @@
+
+
+
+<script	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script>
+$(document).on('change','.frequency input[type="checkbox"]',function(event){ 
+	event.stopPropagation();
+var count=$('.frequency input[type="checkbox"]:checked').length; 
+ if(count==0){
+	$("#please_select_li").html("Please Select");
+ }else{
+	$("#please_select_li").html(" Frequency Selected");
+	//("+count+")
+ }
+ 
+});
+</script>
+	
+<script>
+ $('.myMenu ul li.has-children > span').click(function(event) {
+	event.stopPropagation();
+	
+	 $('.myMenu ul li.has-children > span').parent().removeClass('activeMenu');
+		$(this).parent().addClass('activeMenu');
+	$(this).parent().siblings().find('ul').slideUp(300);  
+  $('.SecondDropDown').hide(300);
+
+
+	$(this).next('ul').stop(true, false, true).slideToggle(300);
+	return false;
+});
+$('body').click(function(){
+$('.firstDrodown').hide(300);
+});
+$('.SecondDropDown').click(function(event){
+
+event.stopPropagation();
+ //var target = $(event.target);
+ // if (target.is( "input" ) || target.is( "label" )) {
+     
+  //}else{
+	
+ // }
+
+//console.log("Ugan ",event.target.nodeName);
+//var type=event.target.nodeName;
+//if(type=="LABEL" || type=="INPUT"){
+//}else{
+//event.stopPropagation();
+//}	
+});
+
+$("#oncall1").click(function(e) {
+  e.stopPropagation();
+  $('.myMenu ul li.has-children > span').parent().removeClass('activeMenu');
+  $('.selecticon-rmv').addClass('activeMenu');
+  $('.SecondDropDown').hide(300);
+  //
+});
+
+$('.scrollpagehide').on('click', function() {
+ $('body').toggleClass('body-popup-opened');
+});
+
+ </script>
+<div class="background-static"></div>
+<div class="ContentMainContainer">
+
+	<div class="custom_tab">
+		<div class="tab_heading">
+			<ul>
+				<li ng-class="{ active: storeListView }"><a href
+					ng-click="storeListView=true;assignActivityTab=false">STORE
+						LIST </a></li>
+				<li ng-class="{ active: assignActivityTab }"><a href
+					ng-click="assignActivityTab=true;storeListView=false">ASSIGN
+						ACTIVITY</a></li>
+			</ul>
+		</div>
+		<div class="tab-container">
+			<div class="tab_panel" ng-show="storeListView">
+			<div class="filter-frequency">
+				<div class="filter-block1">
+					<!--<div class="filter_title">FILTER</div>-->
+					<div class="form-field mr10" style="width: 232px;">
+						<label class="select_label"><span>Select Buy Customer</span> <select
+							class="select-field h56" ng-model="buyCustomerSelected"
+							ng-change="getBuyCustomerDetails(buyCustomerSelected); checkStoreListViewBtn();"
+							ng-options="customer.customerName for customer in buyCustomers| orderBy:'customerName'">
+								<option value="">Please Select</option>
+						</select></label>
+					</div>
+
+					 <div class="form-field mr10" style="width:232px;">
+							<label class="select_label"><span>Select Supplier</span>
+							<select class="select-field h56" ng-model="supplierSelected" ng-change="checkStoreListViewBtn();"
+							ng-options="supplier.description for supplier in suppliersForCustomerSelected | orderBy:'description'">
+								 <option value="" >Please Select</option>
+							</select></label>
+					 </div>
+					 <div  class="spinner-overlay" ng-show="loaderStoreListView" style="padding-bottom:20px">  
+                  <div class="loader-inner">  <i  class="fa fa-spin fa-circle-o-notch"></i> Loading ... </div></div>
+                  
+                  
+                  <div class="form-field mr10" style="width:190px;">
+                     <label class="select_label"><span>Select State</span>
+       					 <select class="select-field h56" ng-model="address.states"
+           				 ng-options="state.lookupCode as state.description for state in lov_state">
+           				 <option value="">Please Select</option> </select> </label>
+						
+        			</div>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+
+					<div class="form-field mr10 submiticon" >
+							<button class="btn btn-field btn-green iconcolor" ng-click = "getCustomerSites(buyCustomerSelected,supplierSelected,address.states)" ng-disabled="storeListViewBtn" title="Go">
+							<i class="fa fa-angle-right"></i></button>
+					 </div>
+					
+					<div class="form-field search-control" style="float: right;"
+						ng-show="assignActivityTab==true">
+						<input type="text" class="input-field search-field searchboxWidth"
+							ng-model="searchTextActivityGrid" placeholder="Search Activity " title="Search">
+						<button class="btn-search">
+							<i class="fa fa-search" aria-hidden="true"></i>
+						</button>
+					</div>
+
+
+
+                    <div class="form-field search-control" style="float: right;" ng-show="storeListView==true">
+					<input type="text" class="input-field search-field " ng-model="searchTextStoreManagementGrid" placeholder="Search" title="Search by Name, Buy Customer Site, Supplier, Material Profile">
+
+					<button class="btn-search" title="Search"><i class="fa fa-search" aria-hidden="true"></i></button>
+			 </div>
+                  <div class="form-field search-control" style="float: right;" ng-show="assignActivityTab==true">
+					<input type="text" class="input-field search-field searchboxWidth" ng-model="searchTextActivityGrid" placeholder="Search " title="Search by Store Name, Supplier, Driver Name, Sell Customer Site, New Driver">
+
+					<button class="btn-search" title="Search"><i class="fa fa-search" aria-hidden="true"></i></button>
+			 </div>	 						 
+					
+				</div>
+				 <div style="float:right;">
+					<button type="button" class="btn btn-widthfrequency btn-edit freqicon pad-frequtopbottom "
+						ng-click="setfrequencyPopup();"
+						ng-disabled="setFrequencyBtn"> <img src="/brta/app/resources/images/setfrequency.png" alt="wrong path" title="Set Frequency">SET FREQUENCY</button>
+				</div>
+			
+				</div>
+				<div ng-show="showAddDataSuccessMessage"
+					style="color: green; margin-left: 449px;">
+					<span>Data was set successfully</span>
+				</div>
+
+				<div ng-show="showAddFrequencySuccessMessage"
+					style="color: green; margin-left: 449px;">
+					<span>Frequency was set successfully</span>
+				</div>
+
+					<div class="custom_table scroll_table table-align-storelist">
+						<table>
+							 <tr>
+									<!--<th style='width:200px'>Last Name <span style="float:right;"><i class="fa fa-sort-alpha-asc" aria-hidden="true"></i></span></th>-->
+                  <th><div class="custom-check checkboxMarginremv">
+									<input type="checkbox" id="selectall"ng-disabled="storeListCheckAllBtn" ng-model="selectall" ng-change="checkAll()"> <label for="selectall" ><div class="select">select</div></label>
+								</div> </th>
+                  <th>Name</th>
+                 
+                  <th>Buy Customer Site</th>
+                    
+				  <!-- <th>Avg.WT of Bale in Pounds</th> -->
+
+				  <th class="nowrap"> Start Date</th>
+
+				  <th class="nowrap">Supplier Site</th>
+
+				  <th class="nowrap">Material Profile</th>
+				  <th class="freq-datawidth">Action</th>
+			<!--<th class="nowrap scrollpagehide">Set Frequency</th>-->
+		  
+							 </tr>
+               <!--<tr class="table_form form-field">
+
+                 <td><input type="text" class="table_input input-field"></td>
+                 <td><input type="text" class="table_input input-field"></td>
+                 <td><input type="text" class="table_input input-field"></td>
+                 <td><input type="text" class="table_input input-field"></td>
+                 <td><select class="table_select select-field"><option></option></select></td>
+                 <td><input type="text" class="table_input input-field"></td>
+                 <td><input type="text" class="table_input input-field"></td>
+                 <td><select class="table_select select-field"><option></option></select></td>
+                 <td>
+                   <div class="form_submit">
+                     <button type="button" class="btn_image  save_btn">
+                       <img src="images/save_btn.png">
+                     </button>
+                     <button type="button" class="btn_image  close_btn">
+                       <img src="images/close_btn.png">
+                     </button>
+                   </div>
+                   </td>
+               </tr>-->
+
+
+						<!-- <div id="loader" ng-show="loaderActiveActivityList"> -->
+						<div class="spinner-overlay" ng-show="loaderActiveStoreManagement"
+							style="padding-bottom: 20px">
+							<div class="loader-inner"><i class="fa fa-spin fa-circle-o-notch"></i> Loading...
+						</div></div>
+						<!-- </div> -->
+						<tr class="nowrap"
+							dir-paginate="customerSite in (storeFilteredItems=(customerSites | filter:searchTextStoreManagementGrid | orderBy:'siteName')) | itemsPerPage: 10"
+							class="table_form form-field" pagination-id="StoreListTable"current-page="currentPage"on-page-change="pageChangeHandlerStore(newPageNumber)">
+
+							<td>
+								<div class="custom-check"
+									ng-show="customerSite.balePickupStartDate!=null;customerSite.configuredSupplierSites !='';customerSite.configuredSupplierSites !=''">
+									<input type="checkbox" id="test{{customerSite.customerSiteId}}"
+										ng-model="customerSite.checked"
+										ng-change="addToSelectedCustomerSites(customerSite)" /> <label
+										for="test{{customerSite.customerSiteId}}"></label>
+								</div>
+							</td>
+							<td>{{customerSite.siteName}}</td>
+
+							<td class="nowrap-address">{{customerSite.location.houseNumber}}
+								{{customerSite.location.address1}}
+								{{customerSite.location.address3}}
+								{{customerSite.location.address4}}
+								{{customerSite.location.postCode}}</td>
+
+							<!-- <td>{{customerSite.avgBaleWeight}}</td> -->
+							<td>{{customerSite.balePickupStartDate | date :
+								"MM/dd/yyyy"}}</td>
+							<td>{{customerSite.configuredSupplierSites |
+								convertArrayToString }}</td>
+							<td>{{customerSite.configuredMaterials |
+								convertArrayToString}}</td>
+								<!--btn btn-widthsetdata--->
+							<td><button type="button"
+									ng-if="customerSite.balePickupStartDate==null"
+									class=" btn-edit margin-setdata scrollpagehide noneborder"
+									ng-click="setdataPopup(customerSite,'set')"><img src="/brta/app/resources/images/setdata.png" class="margin-setdata" title="Set Data"alt="wrong path"></button>
+								<button type="button"
+									ng-if="customerSite.balePickupStartDate!=null"
+									class=" btn-edit margin-setdata noneborder"
+									ng-click="setdataPopup(customerSite,'edit');"><img src="/brta/app/resources/images/editdata.png" class="margin-setdata" title="Edit Data" alt="wrong path"></button>
+									
+									<button type="button"
+									ng-disabled="customerSite.balePickupStartDate==null || ncustomerSite.configuredSupplierSites =='' || customerSite.configuredSupplierSites ==''"
+									class="btn btn-widthfrequency btn-edit noneborder"
+									ng-if="customerSite.hasFrequency==false"
+									ng-click="setfrequencyPopupRow(customerSite,'set');"><img src="/brta/app/resources/images/setfrequency.png" title="Set Frequency" alt="wrong path">
+									</button>
+								<button type="button" class="btn btn-widthfrequency btn-edit noneborder "
+									ng-if="customerSite.hasFrequency==true"
+									ng-click="setfrequencyPopupRow(customerSite,'edit');">
+									<img src="/brta/app/resources/images/editfrequency.png" title="Edit Frequency" alt="wrong path">
+
+																		</button></td>
+						</tr>
+
+					</table>
+				</div>
+				<div class="set-frequency">
+					<button type="button" class="btn btn-widthfrequency btn-edit freqicon pad-frequtopbottom"
+						style="float: right;" ng-click="setfrequencyPopup();"
+						ng-disabled="setFrequencyBtn"><img src="/brta/app/resources/images/setfrequency.png" title="Set Frequency" alt="wrong path">SET FREQUENCY</button>
+				</div>
+
+				<div class="table_pagination_container">
+					<!-- <div class="list_of_page form-field">
+              <label class="mr10">Results Per Page</label>
+              <select class="select-field bordercolorG"><option>All</option></select>
+            </div> -->
+					<div class="custom_pagination pagination_wrapper">
+						<dir-pagination-controls pagination-id="StoreListTable"
+							boundary-links="true"></dir-pagination-controls>
+					</div>
+				</div>
+			</div>
+			<div class="tab_panel" ng-show="assignActivityTab">
+				<!--  <div class="form-field search-control" style="float: right;" ng-show="assignActivityTab==true">
+					<input type="text" class="input-field search-field" ng-model="searchTextActivityGrid" placeholder="Search Activity ">
+					<button class="btn-search"><i class="fa fa-search" aria-hidden="true"></i></button>
+			 </div>-->
+
+				<div class="filter-block">
+					<!--<div class="form-group">
+
+          <div class="filter_title">FILTER
+		  
+          <div class="form-field search-control" style="float: right;" ng-show="assignActivityTab==true">
+					<input type="text" class="input-field search-field " ng-model="searchTextActivityGrid" placeholder="Search Activity ">
+					<button class="btn-search"><i class="fa fa-search" aria-hidden="true"></i></button>
+			 </div>
+     
+      </div>
+          </div>-->
+          
+                     <div class="form-field mr10 searchAssign filter-group" style="width:172px;">
+						<label class="select_label labelWidth"><span>Select Buy Customer</span>
+						 <select class="select-field h56" ng-model="buyCustomerSelectedAct" ng-change="getBuyCustomerDetails(buyCustomerSelectedAct);checkAssignActivitySubmitBtn();"
+								 ng-options="customer.customerName for customer in buyCustomers| orderBy:'customerName'">
+						  <option value="" >Please Select</option>
+						  </select></label>
+					</div>
+					<div  class="spinner-overlay" ng-show="loaderAssignActivity" style="padding-bottom:20px">  
+                    <div class="loader-inner"><i  class="fa fa-spin fa-circle-o-notch"></i> Loading ... </div></div>
+					
+					 <div class="form-field mr10 filter-group" style="width:192px;">
+							<label class="select_label labelWidth"><span>Select Supplier</span>
+							<select class="select-field h56"  ng-model="supplierSelectedAct" ng-disabled="buyCustomerSelectedAct==null && suppliersForCustomerSelected.length != 0" ng-change="getAllUsersForSupplier();checkAssignActivitySubmitBtn();" ng-options="supplier.description for supplier in suppliersForCustomerSelected | orderBy:'description'">
+								 <option value="" >Please Select</option>
+							</select></label>
+					 </div>
+
+					<div class="form-field filter-group custom-check bottom-remv mr10 frequency" style="width:178px;">
+
+						<label class="select_label labelWidth labelBorderbottomrm "><span id="oncall2">Select Frequency</span></label>
+
+							<div class="myMenu mymenu1" style="height: 28px ";>
+
+								<ul class="dropDownMenu ">
+
+
+									<li class="has-children frequency-filter color-font color-bold click-issue"><span
+										class="color-font color-bold click span-height" id="please_select_li">Please Select</span>
+										<ul class="list-null firstDrodown firstDrodown1 color-font color-bold">
+											<li class="has-children dropDownMenu-third "><span
+												ng-click="setFrequencyNumber(1)">weekly</span>
+												<ul class="SecondDropDown days-filter color-font color-bold">
+													<li><span>Mon</span>
+													<div>
+															<input id="box1" type="checkbox" class="with-font"
+																name="box" ng-model="frequency.weeklyfilter[1]" /> <label 
+																for="box1"></label class="select_label labelWidth"> <!--label class------class="select_label labelWidth"-->
+														</div></li>
+													<li><span>Tue</span>
+														<div>
+															<input id="box2" type="checkbox" class="with-font"
+																ng-model="frequency.weeklyfilter[2]" /> <label for="box2"></label>
+														</div></li>
+													<li><span>Wed</span>
+													<div>
+															<input id="box3" type="checkbox" class="with-font"
+																ng-model="frequency.weeklyfilter[3]" /> <label for="box3"></label>
+														</div></li>
+													<li><span>Thu</span>
+													<div>
+															<input id="box4" type="checkbox" class="with-font"
+																ng-model="frequency.weeklyfilter[4]" /> <label for="box4"></label>
+														</div></li>
+													<li><span>Fri</span>
+														<div>
+															<input id="box5" type="checkbox" class="with-font"
+																ng-model="frequency.weeklyfilter[5]" /> <label for="box5"></label>
+														</div></li>
+													<li><span>Sat</span>
+													<div>
+															<input id="box6" type="checkbox" class="with-font"
+																ng-model="frequency.weeklyfilter[6]" /> <label for="box6"></label>
+														</div></li>
+													<li><span>Sun</span>
+													<div>
+															<input id="box7" type="checkbox" class="with-font"
+																ng-model="frequency.weeklyfilter[7]" /> <label for="box7"></label>
+														</div></li>
+												</ul></li>
+											<li class="has-children"><span
+												ng-click="setFrequencyNumber(2)">monthly</span>
+												<ul class="SecondDropDown color-font color-bold">
+													<li><span>Week1</span>
+													<div>
+															<input id="fre-week1" type="checkbox" class="with-font"
+																ng-model="frequency.monthly[1]" /> <label
+																for="fre-week1"></label>
+														</div></li>
+													<li><span>Week2</span>
+													<div>
+															<input id="fre-week2" type="checkbox" class="with-font"
+																ng-model="frequency.monthly[2]" /> <label
+																for="fre-week2"></label>
+														</div></li>
+													<li><span>Week3</span>
+													<div>
+															<input id="fre-week3" type="checkbox" class="with-font"
+																ng-model="frequency.monthly[3]" /> <label
+																for="fre-week3"></label>
+														</div></li>
+													<li><span>Week4</span>
+													<div>
+															<input id="fre-week4" type="checkbox" class="with-font"
+																ng-model="frequency.monthly[4]" /> <label
+																for="fre-week4"></label>
+														</div></li>
+													<li><span>Week5</span>
+													<div>
+															<input id="fre-week5" type="checkbox" class="with-font"
+																ng-model="frequency.monthly[5]" /> <label
+																for="fre-week5"></label>
+														</div></li>
+												</ul></li>
+											<li class="has-children selecticon-rmv"><span
+												ng-click="setFrequencyNumber(3)">OnCall <div class="custom-check checkboxMarginremv" style="float:right;">
+									<input type="checkbox" id="oncall1" > <label for="oncall1"></label>
+								</div></span></li>
+
+										</ul></li>
+								</ul>
+							</div> </label>
+					</div>
+
+
+
+
+
+
+					<!--<div class="form-field mr10 filter-group" style="width:172px;">
+						<label class="select_label"><span>Frequency</span>
+						 <select class="select-field h56" >
+								<option value="" >Select Frequency</option>
+						 </select></label>
+					</div>-->
+					<div class="form-field mr10 searchAssign filter-group" style="width: 172px;">
+						<label class="select_label labelWidth"><span>Select Driver</span> <select
+							class="select-field h56" ng-model="driverSelected"
+							ng-options="driver.lastName + ' ' + driver.firstName for driver in drivers| orderBy:'lastName'">
+								<option value="">Please Select</option>
+						</select></label>
+					</div>
+					
+					
+					<div class="form-field mr10 searchAssign filter-group" style="width: 172px;">
+                     <label class="select_label labelWidth"><span>Select State</span>
+       					 <select class="select-field h56" ng-model="address.state"
+           				 ng-options="state.lookupCode as state.description for state in lov_state">
+           				 <option value="">Please Select</option> </select> </label>
+						<!--   <tt>State selected: {{address.state}}</tt> -->
+        			</div>
+
+					<!--			<div class="form-field mr10 filter-group" style="width:172px;">
+						<label class="select_label"><span>Destination</span>
+						 <select class="select-field h56" ng-model="destinatonSelected" 
+
+						 ng-options="destination.customerName for destination in sellCustomersForCustomerSelected| orderBy:'customerName'">
+								<option value="" >Select Destination</option>
+						 </select></label>
+				</div>-->
+
+
+					<div class="form-field mr10 searchAssign submiticon">
+						<button class="btn btn-field btn-green submit-btn iconcolor" title="Go"
+							ng-click="getAllAssignmentsWithFilters()"
+							ng-disabled="assignActivityBtn"><i class="fa fa-angle-right"></i></button>
+					</div>
+					<!--<div class="form-field mr0">
+							<button class="btn_image btn_recet" type="button"><img src="/brta/app/resources/images/recet.png"></button>
+					 </div>-->
+					<div class="form-field search-control" style="float: right;"
+						ng-show="assignActivityTab==true">
+						<input type="text" class="input-field search-field assign-search searchboxWidth "
+							ng-model="searchTextActivityGrid" placeholder="Search" title="Search  by Store Name, Supplier, Driver Name, Sell Customer Site">
+						<button class="btn-search" title="Search">
+							<i class="fa fa-search" aria-hidden="true"></i>
+						</button>
+					</div>
+					
+<div class="assignButton-right">
+					
+						<button type="button" class="btn btn-widthfrequency btn-edit freqicon pad-frequtopbottom assignimg-width" style="float:right;" title="Assign" ng-click="assignactivity()" ng-disabled="assignBtn" disabled="disabled"> <img src="/brta/app/resources/images/assign.png" alt="wrong path" title="Assign">
+				ASSIGN</button>
+		</div>		</div>
+
+
+
+				<div ng-show="showSuccessMessageActivity"
+					style="color: red; margin-left: 449px;">
+					<span>Activity was assigned successfully</span>
+				</div>
+				<div class="custom_table table-align-storelist">
+					<table>
+						<tr>
+							<!--<th style='width:200px'>Last Name <span style="float:right;"><i class="fa fa-sort-alpha-asc" aria-hidden="true"></i></span></th>-->
+							<th><div class="custom-check checkboxMarginremv">
+									<input type="checkbox" id="selectall1"ng-disabled="storeListAllAssignBtn"ng-model="selectallassign" ng-change="checkAllAssign()"> <label for="selectall1"><div class="select">select<div>
+								</div> </div></label></div>
+								</th>
+							<th>Store Name</th>
+							<th>Frequency</th>
+
+							<th> Pickup Date</th>
+							
+							<th>Supplier</th>
+							<th>Driver Name</th>
+							<th>Sell Customer Site</th>
+
+							<th>New Driver</th>
+
+
+						</tr>
+						<!-- <div id="loader" ng-show="loaderActiveActivityList"> -->
+						<div class="spinner-overlay" ng-show="loaderActiveActivityList">
+							<div class="loader-inner"><i class="fa fa-spin fa-circle-o-notch"></i> Loading...</div>
+						</div>
+						<!-- </div> -->
+
+						<tr
+							dir-paginate="assignment in (assignFilteredItems=(baleAssignments | filter:searchTextActivityGrid | orderBy:'buyCustomerSite.siteName'))| itemsPerPage: 10"
+							class="table_form form-field" pagination-id="assignmentTable"current-page="currentPageAssign"on-page-change="pageChangeHandlerAssign(newPageNumber)">
+
+							<td><div class="custom-check">
+
+									<input type="checkbox"
+										id="test{{assignment.balePickupAssignmentId}}"
+										ng-model="assignment.checked"
+										ng-change="addToAssignmentList(assignment)" /> <label
+										for="test{{assignment.balePickupAssignmentId}}"></label>
+								</div></td>
+							<td>{{assignment.buyCustomerSite.siteName}}</td>
+							<td>{{assignment.frequency
+								|filterShowDay:assignment.weekNumber : assignment.day}}</td>
+							<td>{{assignment.nextPickupDate}}</td>
+							<td>{{assignment.supplier.description}}</td>
+							<td>{{assignment.user.lastName}}
+								{{assignment.user.firstName}}</td>
+							<td>{{assignment.sellCustomerSite.siteName}}</td>
+							<td style="width:2%;padding-left: 20px;"><div
+									ng-if="assignment.divertedUser==null && assignment.user!=null">
+									<button class="btn-edit margin-setdata noneborder"
+										ng-click="showAssignDriverPopup(assignment)">
+							<img src="/brta/app/resources/images/driverassign1.png" title="Assign Driver" alt="wrong path">
+									</button>
+								</div>
+								<div ng-if="assignment.divertedUser!=null">
+									<a href="" target="_self"
+										ng-click="showDeleteNewDriverPopup(assignment)">{{assignment.divertedUser.lastName}}
+										{{assignment.divertedUser.firstName}} on
+										{{assignment.nextPickupDate}}</a>
+								</div></td>
+
+						</tr>
+
+					</table>
+					<div class="set-frequency">
+						<button type="button"  class="btn btn-widthfrequency btn-edit freqicon pad-frequtopbottom assignimg-width" style="float:right;" title="Assign"
+							ng-click="assignactivity()" ng-disabled="assignBtn"> <img src="/brta/app/resources/images/assign.png" alt="wrong path" title="Assign">ASSIGN</button>
+					</div>
+					<div class="custom_pagination pagination_wrapper">
+					<!--<div class="list_of_page form-field">
+              <label class="mr10">Results Per Page</label>
+              <select class="select-field bordercolorG"><option>All</option>
+			  <option>All</option>
+			  <option>All</option><option>All</option>
+			  </select>
+            </div> -->
+						<dir-pagination-controls pagination-id="assignmentTable"
+							boundary-links="true"></dir-pagination-controls>
+					</div>
+				</div>
+			</div>
+
+			<div class="table_pagination_container">
+				
+				<!--<div class="pagination_wrapper form-field" style="float:right;">
+                  <ul uib-pagination boundary-links="true" total-items="totalItems" ng-model="currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" force-ellipses="true"></ul>
+            </div>-->
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<!-- Assign New Driver Popup -->
+
+
+<div class="set-data-popup popup_overlay fadein"
+	ng-show="assignNewDriver">
+	<div class="popup_content">
+
+		<div class="popup-header">
+			<button type="button" class="close"
+				ng-click="closeAssignNewDriverPopup()">
+				<img src="/brta/app/resources/images/close_btn.png">
+			</button>
+
+			<h4 class="modal-title" id="myModalLabel">Assign New Driver</h4>
+		</div>
+		<div class="popup-body">
+
+			<div class="popup-layer">
+				<div class="form-field">
+					<label>Select Driver</label> <select
+						class="select-field bordercolorG"
+						ng-model="assignmentForNewDriver.divertedUser"
+						ng-options="driver.lastName + ' ' + driver.firstName for driver in otherdrivers | orderBy:'lastName'">
+						<option value="">Select Driver</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="popup-footer">
+				<button type="button" class="btn assign_btn  btn-primary floatright" title="Apply"
+					ng-click="addDivertedUserToAssignment(assignmentForNewDriver)">Apply</button>
+
+			</div>
+
+
+
+		</div>
+	</div>
+</div>
+
+
+<div class="set-data-popup popup_overlay fadein"
+	ng-show="newDriverDeletePopup">
+	<div class="popup_content">
+
+		<div class="popup-header">
+			<button type="button" class="close"
+				ng-click="closeAssignNewDriverDeletePopup()">
+				<img src="/brta/app/resources/images/close_btn.png">
+			</button>
+
+			<h4 class="modal-title" id="myModalLabel">Delete New Driver
+				Assignment</h4>
+		</div>
+		<div class="popup-body">
+
+			<div class="popup-layer">
+				<div class="form-field">
+					<label>Are you sure you want to delete the New Driver
+						Assignment for the pickup?</label>
+
+				</div>
+
+				<div class="popup-footer">
+					<button type="button" class="btn assign_btn  btn-primary floatright"
+						ng-click="removeDivertedUserToAssignment()">Delete</button>
+					<button type="button" class="btn assign_btn  btn-primary floatright"
+						ng-click="closeAssignNewDriverDeletePopup()">Cancel</button>
+				</div>
+
+
+
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<!-- SET DATA Popup Begin -->
+<div class="set-data-popup popup_overlay fadein"
+	ng-if="setDataPopup==true">
+	<div class="popup_content setdata-scroll">
+
+		<div class="popup-header">
+			<button type="button" class="close"
+				ng-click="setDataPopupContentClose()">
+				<img src="/brta/app/resources/images/close_btn.png">
+			</button>
+
+			<h4 class="modal-title" id="myModalLabel">Set Data</h4>
+			<div class="alert" ng-show="errorFlag">Please provide a Store
+				Start Date</div>
+		</div>
+		<div class="popup-body setdata-scroll">
+			<div class="custom_table">
+				<table>
+					<tr>
+						<th>Store Name</th>
+						<!-- <th>Store ID </th> -->
+						<th>Buy Customer Site</th>
+						<th>City / Town</th>
+						<th>State</th>
+						<th>Zip Code</th>
+						<th>Store Phone No.</th>
+					</tr>
+					<tr>
+						<td>{{customerSite.siteName}}</td>
+						<td>{{customerSite.location.houseNumber}}
+							{{customerSite.location.address1}}</td>
+						<td>{{customerSite.location.address2}}
+							{{customerSite.location.address3}}</td>
+
+						<td>{{customerSite.location.address4}}</td>
+						<td>{{customerSite.location.postCode}}</td>
+						<td>{{customerSite.location.telephoneNumber}}</td>
+					</tr>
+				</table>
+			</div>
+			<!-- <div class="popup-layer">
+			<div class="form-field">
+             <label>Select Service Provider</label>
+              <select class="select-field bordercolorG" multiple ng-model = "setDatapopup.supplierSiteSelected" ng-options="supplierSite.siteName for supplierSite in supplierSites| orderBy:'siteName'">
+              <option value="">Select Service Provider</option></select>
+            </div>
+		</div>
+		<div class="popup-layer">
+			<div class="form-field">
+             <label >Select Commodity Type</label>
+              <select class="select-field bordercolorG" multiple ng-model="setDatapopup.materialSelected"  ng-options="material.description for material in materials| orderBy:'description'"><option value="">Select Commodity Type</option></select>
+            </div>
+
+		</div> -->
+		<div class="scroll-popup">
+			<div class="popup-layer ">
+
+				<div class="select-drive-name checkbox-position border-removesuppliersite">
+					<div class="inner-content box-align-provider">
+						<p>Select Supplier Site</p>
+						<div class="select-field serviceprovider-multifilter">
+							<div ng-click="showSingleSelect1();">
+								<span>{{supplierSiteCheckbox.siteName}}</span>
+							</div>
+							<div class="CustomDropdown checkbox-align" ng-if="ss1">
+								<div class="panel panel-default">
+									<input type="text" class="form-control search_field"
+										ng-model="searchTextSingleSelect" placeholder="Search"
+										value="">
+									<!-- List group -->
+									<ul id="autolist" class="list-group">
+										<li class="list-group-item checkbox-visible"
+											ng-repeat="supplierSite in supplierSites| orderBy:'siteName' | filter:searchTextSingleSelect">
+											<div class="custom-check">
+
+												<span>{{supplierSite.siteName}}</span> <input
+													type="checkbox" id="supplierSite{{$index}}"
+													ng-model="supplierSite.checked"
+													ng-change="updateSupplierSite(supplierSite);checkSetDataPopupBtn();"
+													name="SingleSelect" class="with-font" /> <label
+													for="supplierSite{{$index}}"></label>
+											</div>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+
+			<div class="popup-layer">
+
+				<p>Select Material Profile</p>
+				<div class="select-field  checkbox-position border-removesuppliersite">
+					<div ng-click="selectdestination();">
+						<span>{{materialCheckbox.description}}</span>
+					</div>
+					<div class="CustomDropdown" ng-if="ss3">
+						<div class="panel panel-default">
+							<input type="text" class="form-control search_field"
+								ng-model="searchTextselectdestination" placeholder="Search"
+								value="">
+							<!-- List group -->
+							<ul id="autolist" class="list-group">
+								<li class="list-group-item"
+									ng-repeat="material in materials | filter:searchTextselectdestination">
+									<div class="custom-check">
+										<span>{{material.description}}</span> <input
+											id="material{{$index}}"
+											ng-change="updateMaterial(material);checkSetDataPopupBtn();"
+											name="destination" ng-model="material.checked"
+											type="checkbox" class="with-font" /> <label
+											for="material{{$index}}"></label>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+
+			<!-- <button type="button"  ng-click="applyConfigurationData()">Apply</button> -->
+
+			<div ng-show="setDatapopup.materialSelected.length!=0">
+				<div class="popup-layer"
+					ng-repeat="material in setDatapopup.materialSelected">
+					<div class="form-field avgbale-wait-box font">
+						<label>AVG WT of Bale for {{material.description}} in lbs</label>
+						<input only-numeric type="text"
+							class="input-field bordercolorG set-data-input-height"
+							maxlength="4" ng-model="material.avgBaleWeight"
+							placeholder="Type AVG WT of Bale in lbs ">
+
+					</div>
+				</div>
+			</div>
+
+
+
+			<div class="popup-footer">
+				<div class="popup-layer pull-left borderbottomremv">
+					<div class="form-field">
+						<label class="select_label"><span>Start Date</span>
+							<div class="input-group date-field" ng-click="StartDateFun()">
+								<input type="text"
+									class="input-field ng-pristine ng-valid ng-isolate-scope ng-empty ng-valid-date ng-touched"
+									placeholder="Start Date" datepicker-append-to-body="true"
+									uib-datepicker-popup="MM-dd-yyyy"
+									ng-model="setDatapopup.balePickupStartDate"
+									is-open="StartDate.opened" show-button-bar="false"
+									datepicker-options="dateOptionsStart" close-text="Close"
+									ng-click="StartDateFun()"
+									ng-change="checkSetDataPopupBtn();">
+									  <i class="date-icon glyphicon glyphicon-calendar"></i>
+							</div> </label>
+					</div>
+				</div>
+
+				<!--<button type="button" class="btn btn-field btn-primary floatright"
+					ng-click="applyConfigurationData()" ng-disabled="setDataApplyBtn_{{customerSiteIdForBtn}}">Apply</button>-->
+
+			</div>
+			
+			<div class="popup-footer">
+				<div class="popup-layer pull-left borderbottomremv">
+
+				</div>
+
+			<!--class="btn assign_btn  btn-primary floatright"-->
+				<button type="button" 
+				class="btn btn-widthfrequency btn-edit freqicon pad-frequtopbottom "
+					ng-click="applyConfigurationData()" ng-disabled="setDataApplyBtn_{{customerSiteIdForBtn}}">
+					<img src="/brta/app/resources/images/editdata.png" class="margin-setdata" title="Set Data"alt="wrong path">
+					Apply</button>
+
+			</div>
+			</div>
+		</div>
+
+
+	</div>
+</div>
+
+<!-- SET DATA Popup END -->
+<!-- SET DATA Frequency popup start-->
+<div class="modal popup_overlay set-frequency-popup animationIf"
+	style="display: block;" ng-if="setFrequencyPopupContent">
+	<div class="modal-dialog">
+		<!--inside contents-->
+		<div class="modal-content inner-content">
+			<!--header-->
+			<div class="modal-header inner-header">
+				<div class="inner-header-left">
+					<div class="custom-inner-c">
+						<h2>Set Frequency</h2>
+					</div>
+				</div>
+				<div class="inner-header-right">
+					<img src="/brta/app/resources/images/close_btn.png"
+						ng-click="setFrequencyclose()" />
+				</div>
+			</div>
+			<!--body-->
+			<div class="inner-body">
+				<div class="frequency-box">
+					<!-- frequency box-->
+					<!--black strip-->
+					<div class="title-strip bg-black">
+						<div class="custom-inner-c">
+							<div class="inner-strip">
+								<div class="inner-days">
+									<div class="custom-check">
+										<input type="checkbox" id="weekly"
+											ng-model="frequency.weeklySelected"
+											 class="with-font" /> <label
+											for="weekly"></label> <span>weekly</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--week days-->
+					<div class="freq-days">
+						<div class="custom-inner-c">
+							<div class="inner-days">
+								<div class="custom-check">
+									<span>Mon</span> <input type="checkbox" id="freqbox1"
+										ng-model="frequency.weekly[1]" ng-disabled="!frequency.weeklySelected"
+										class="with-font" name="box" disabled="disabled" /> <label
+										for="freqbox1"></label>
+								</div>
+								<div class="custom-check">
+									<span>Tue</span> <input type="checkbox" id="freqbox2"
+										ng-model="frequency.weekly[2]" ng-disabled="!frequency.weeklySelected"
+										class="with-font" name="box" disabled="disabled" /> <label
+										for="freqbox2"></label>
+								</div>
+								<div class="custom-check">
+									<span>Wed</span> <input type="checkbox" id="freqbox3"
+										ng-model="frequency.weekly[3]" ng-disabled="!frequency.weeklySelected"
+										class="with-font" name="box" disabled="disabled" /> <label
+										for="freqbox3"></label>
+								</div>
+								<div class="custom-check">
+									<span>Thu</span><input type="checkbox" id="freqbox4"
+										ng-model="frequency.weekly[4]" ng-disabled="!frequency.weeklySelected"
+										class="with-font" name="box" disabled="disabled" /> <label
+										for="freqbox4"></label>
+								</div>
+								<div class="custom-check">
+									<span>Fri</span> <input type="checkbox" id="freqbox5"
+										ng-model="frequency.weekly[5]" ng-disabled="!frequency.weeklySelected"
+										class="with-font" name="box" disabled="disabled" /> <label
+										for="freqbox5"></label>
+								</div>
+								<div class="custom-check">
+									<span>Sat</span> <input type="checkbox" id="freqbox6"
+										ng-model="frequency.weekly[6]" ng-disabled="!frequency.weeklySelected"
+										class="with-font" name="box" disabled="disabled" /> <label
+										for="freqbox6"></label>
+								</div>
+								<div class="custom-check">
+									<span>Sun</span><input type="checkbox" id="freqbox7"
+										ng-model="frequency.weekly[7]" ng-disabled="!frequency.weeklySelected"
+										class="with-font" name="box" disabled="disabled" /> <label
+										for="freqbox7"></label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--end week days-->
+
+					<!--black strip-->
+					<div class="title-strip bg-black">
+						<div class="custom-inner-c">
+							<div class="inner-strip">
+								<div class="inner-days">
+									<div class="custom-check">
+										<input type="checkbox" id="monthly"
+											ng-model="frequency.monthlySelected"
+											 class="with-font" /> <label
+											for="monthly"></label> <span>Monthly</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="border-green month-scroll">
+						<!--green border-->
+						<!--week days group-->
+						<div class="freq-days">
+							<div class="custom-inner-c">
+								<div class="inner-days">
+									<div class="week-select">
+										<div class="custom-check">
+											<span>week 1</span> <input type="checkbox" id="week1"
+												ng-model="frequency.monthWeek1Selected"
+												ng-disabled="!frequency.monthlySelected"> <label for="week1"></label>
+										</div>
+									</div>
+									<div class="week-select-indiv">
+										<div class="custom-check">
+											<span>Mon</span> <input type="checkbox" id="monthWeek1mon"
+												ng-model="frequency.monthWeek1[1]"
+												ng-disabled="!frequency.monthlySelected"> <label
+												for="monthWeek1mon"></label>
+										</div>
+										<div class="custom-check">
+											<span>Tue</span>  <input type="checkbox" id="monthWeek1tue"
+												ng-model="frequency.monthWeek1[2]"
+												ng-disabled="!frequency.monthlySelected"> <label
+												for="monthWeek1tue"></label>
+										</div>
+										<div class="custom-check">
+											<span>Wed</span> <input type="checkbox" id="monthWeek1wed"
+												ng-model="frequency.monthWeek1[3]"
+												ng-disabled="!frequency.monthlySelected"> <label
+												for="monthWeek1wed"></label>
+										</div>
+										<div class="custom-check">
+											<span>Thu</span> <input type="checkbox" id="monthWeek1thr"
+												ng-model="frequency.monthWeek1[4]"
+												ng-disabled="!frequency.monthlySelected"> <label
+												for="monthWeek1thr"></label>
+										</div>
+										<div class="custom-check">
+											<span>Fri</span> <input type="checkbox" id="monthWeek1fri"
+												ng-model="frequency.monthWeek1[5]"
+												ng-disabled="!frequency.monthlySelected"> <label
+												for="monthWeek1fri"></label>
+										</div>
+										<div class="custom-check">
+											<span>Sat</span> <input type="checkbox" id="monthWeek1sat"
+												ng-model="frequency.monthWeek1[6]"
+												ng-disabled="!frequency.monthlySelected"> <label
+												for="monthWeek1sat"></label>
+										</div>
+										<div class="custom-check">
+											<span>Sun</span> <input type="checkbox" id="monthWeek1sun"
+												ng-model="frequency.monthWeek1[7]"
+												ng-disabled="!frequency.monthlySelected"> <label
+												for="monthWeek1sun"></label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--end week days group-->
+
+						<!--week days group-->
+						<div class="freq-days">
+							<div class="custom-inner-c week-select-active">
+								<div class="inner-days">
+									<div class="week-select">
+										<div class="custom-check">
+											<span>week 2</span> <input type="checkbox" id="week2"
+												ng-model="frequency.monthWeek2Selected"
+												ng-disabled="!frequency.monthlySelected"> <label for="week2"></label>
+										</div>
+									</div>
+									<div class="week-select-indiv">
+										<div class="custom-check">
+											<span>Mon</span> <input type="checkbox" id="monthWeek2mon"
+												ng-model="frequency.monthWeek2[1]"
+												ng-disabled="!frequency.monthlySelected"> <label
+												for="monthWeek2mon"></label>
+										</div>
+										<div class="custom-check">
+											<span>Tue</span> <input type="checkbox" id="monthWeek2tue"
+												ng-model="frequency.monthWeek2[2]"ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek2tue"></label>
+										</div>
+										<div class="custom-check">
+											<span>Wed</span> <input type="checkbox" id="monthWeek2wed"
+												ng-model="frequency.monthWeek2[3]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek2wed"></label>
+										</div>
+										<div class="custom-check">
+											<span>Thu</span> <input type="checkbox" id="monthWeek2thr"
+												ng-model="frequency.monthWeek2[4]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek2thr"></label>
+										</div>
+										<div class="custom-check">
+											<span>Fri</span> <input type="checkbox" id="monthWeek2fri"
+												ng-model="frequency.monthWeek2[5]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek2fri"></label>
+										</div>
+										<div class="custom-check">
+											<span>Sat</span> <input type="checkbox" id="monthWeek2sat"
+												ng-model="frequency.monthWeek2[6]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek2sat"></label>
+										</div>
+										<div class="custom-check">
+											<span>Sun</span> <input type="checkbox" id="monthWeek2sun"
+												ng-model="frequency.monthWeek2[7]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek2sun"></label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="freq-days">
+							<div class="custom-inner-c">
+								<div class="inner-days">
+									<div class="week-select">
+										<div class="custom-check">
+											<span>week 3</span> <input type="checkbox" id="week3"
+												ng-model="frequency.monthWeek3Selected"
+												ng-disabled="!frequency.monthlySelected"> <label for="week3"></label>
+										</div>
+									</div>
+									<div class="week-select-indiv">
+										<div class="custom-check">
+											<span>Mon</span> <input type="checkbox" id="monthWeek3mon"
+												ng-model="frequency.monthWeek3[1]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek3mon"></label>
+										</div>
+										<div class="custom-check">
+											<span>Tue</span> <input type="checkbox" id="monthWeek3tue"
+												ng-model="frequency.monthWeek3[2]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek3tue"></label>
+										</div>
+										<div class="custom-check">
+											<span>Wed</span> <input type="checkbox" id="monthWeek3wed"
+												ng-model="frequency.monthWeek3[3]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek3wed"></label>
+										</div>
+										<div class="custom-check">
+											<span>Thu</span> <input type="checkbox" id="monthWeek3thr"
+												ng-model="frequency.monthWeek3[4]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek3thr"></label>
+										</div>
+										<div class="custom-check">
+											<span>Fri</span> <input type="checkbox" id="monthWeek3fri"
+												ng-model="frequency.monthWeek3[5]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek3fri"></label>
+										</div>
+										<div class="custom-check">
+											<span>Sat</span> <input type="checkbox" id="monthWeek3sat"
+												ng-model="frequency.monthWeek3[6]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek3sat"></label>
+										</div>
+										<div class="custom-check">
+											<span>Sun</span> <input type="checkbox" id="monthWeek3sun"
+												ng-model="frequency.monthWeek3[7]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek3sun"></label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="freq-days">
+							<div class="custom-inner-c">
+								<div class="inner-days">
+									<div class="week-select">
+										<div class="custom-check">
+											<span>week 4</span> <input type="checkbox" id="week4"
+												ng-model="frequency.monthWeek4Selected"
+												ng-disabled="!frequency.monthlySelected"> <label for="week4"></label>
+										</div>
+									</div>
+									<div class="week-select-indiv">
+										<div class="custom-check">
+											<span>Mon</span> <input type="checkbox" id="monthWeek4mon"
+												ng-model="frequency.monthWeek4[1]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek4mon"></label>
+										</div>
+										<div class="custom-check">
+											<span>Tue</span> <input type="checkbox" id="monthWeek4tue"
+												ng-model="frequency.monthWeek4[2]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek4tue"></label>
+										</div>
+										<div class="custom-check">
+											<span>Wed</span> <input type="checkbox" id="monthWeek4wed"
+												ng-model="frequency.monthWeek4[3]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek4wed"></label>
+										</div>
+										<div class="custom-check">
+											<span>Thu</span> <input type="checkbox" id="monthWeek4thr"
+												ng-model="frequency.monthWeek4[4]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek4thr"></label>
+										</div>
+										<div class="custom-check">
+											<span>Fri</span> <input type="checkbox" id="monthWeek4fri"
+												ng-model="frequency.monthWeek4[5]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek4fri"></label>
+										</div>
+										<div class="custom-check">
+											<span>Sat</span> <input type="checkbox" id="monthWeek4sat"
+												ng-model="frequency.monthWeek4[6]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek4sat"></label>
+										</div>
+										<div class="custom-check">
+											<span>Sun</span> <input type="checkbox" id="monthWeek4sun"
+												ng-model="frequency.monthWeek4[7]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek4sun"></label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="freq-days">
+							<div class="custom-inner-c">
+								<div class="inner-days">
+									<div class="week-select">
+										<div class="custom-check">
+											<span>week 5</span><input type="checkbox" id="week5"
+												ng-model="frequency.monthWeek5Selected"
+												ng-disabled="!frequency.monthlySelected">
+												<label for="week5"></label>
+										</div>
+									</div>
+									<div class="week-select-indiv">
+										<div class="custom-check">
+											<span>Mon</span> <input type="checkbox" id="monthWeek5mon"
+												ng-model="frequency.monthWeek5[1]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek5mon"></label>
+										</div>
+										<div class="custom-check">
+											<span>Tue</span> <input type="checkbox" id="monthWeek5tue"
+												ng-model="frequency.monthWeek5[2]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek5tue"></label>
+										</div>
+										<div class="custom-check">
+											<span>Wed</span> <input type="checkbox" id="monthWeek5wed"
+												ng-model="frequency.monthWeek5[3]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek5wed"></label>
+										</div>
+										<div class="custom-check">
+											<span>Thu</span> <input type="checkbox" id="monthWeek5thr"
+												ng-model="frequency.monthWeek5[4]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek5thr"></label>
+										</div>
+										<div class="custom-check">
+											<span>Fri</span> <input type="checkbox" id="monthWeek5fri"
+												ng-model="frequency.monthWeek5[5]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek5fri"></label>
+										</div>
+										<div class="custom-check">
+											<span>Sat</span> <input type="checkbox" id="monthWeek5sat"
+												ng-model="frequency.monthWeek5[6]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek5sat"></label>
+										</div>
+										<div class="custom-check">
+											<span>Sun</span> <input type="checkbox" id="monthWeek5sun"
+												ng-model="frequency.monthWeek5[7]" ng-disabled="!frequency.monthlySelected">
+											<label for="monthWeek5sun"></label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!--end week days group-->
+					</div>
+					<!--end green border-->
+				</div>
+				<!--end frequency box-->
+			</div>
+
+			<!--black strip bottom-->
+			<div class="title-strip bg-black">
+				<div class="custom-inner-c">
+					<div class="inner-strip">
+						<div class="inner-days">
+							<div class="custom-check"><span>On Call</span>
+								<input type="checkbox" id="oncall" class="with-font" ng-model="frequency.oncall">
+								<label for="oncall"></label> 
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--end black strip bottom-->
+
+
+			<div class="modal-footer">
+							<!--<button type="button" class="btn-custom btn-red">Delete</button>-->
+				<button type="button" class="btn btn-widthfrequency btn-edit freqicon pad-frequtopbottom " title="Generate Frequency"
+					ng-click="generateFrequeny();"> 
+					<img src="/brta/app/resources/images/setfrequency.png" alt="wrong path" title="Set Frequency">Generate</button>			</div>
+		</div>
+	</div>
+</div>
+<!------ Set frequency end-->
+<!---Assign POPUP Start------>
+
+<div class="modal popup_overlay assign-activity-popup" id="myModal"
+		style="display: block;" ng-if="AssignActivityPopup">
+		<div class="modal-dialog">
+			<!--inside contents-->
+			<div class="modal-content inner-content">
+				<!--header-->
+				<div class="modal-header inner-header">
+					<div class="inner-header-left">
+						<div class="custom-inner-c">
+							<h2>Assign Activity</h2>
+						</div>
+					</div>
+					<div class="inner-header-right">
+						<img src="/brta/app/resources/images/close_btn.png"
+							ng-click="assignactivityclose()" />
+					</div>
+				</div>
+				<!--body-->
+				<div class="inner-body">
+					<div class="select-drive-name">
+						<div class="inner-content">
+							<p>Select Driver Name</p>
+							<!-- <div class="select-field">
+								<div ng-click="showSingleSelect1();"><span>{{singleSelect1Value}}</span></div>
+								<div class="CustomDropdown" ng-if="ss1">
+										<div class="panel panel-default">
+											<input type="text" class="form-control search_field" ng-model="searchTextSingleSelect" placeholder="Search" value="">
+											List group
+											<ul id="autolist" class="list-group">
+												<li class="list-group-item" ng-model="driverSelectedinPopup" ng-options="driver.firstName for driver in drivers">
+													<div class="custom-radio">
+														<span>{{SingleSelect.name}}</span>
+														<input id="SingleSelect{{$index}}" ng-change="singleChange(singleSelect1);" name="SingleSelect" ng-model="singleSelect1" type="radio" class="with-font" value="{{SingleSelect.name}}" />
+														<label for="SingleSelect{{$index}}"></label>
+													</div>
+												</li>										
+											 </ul>
+										</div>
+									</div>
+								</div> -->
+							<div class="form-field mr10 filter-group" style="width: 172px;">
+								<label class="select_label"><span>Driver</span> <select
+									class="select-field" ng-model="popParams.driverSelectedinPopup"
+									ng-change="checkAssignDataPopupBtn()"
+									ng-options="driver.lastName + ' ' + driver.firstName for driver in drivers | orderBy:'lastName'">
+										<option value="">Please Select</option>
+								</select></label>
+							</div>
+
+						</div>
+					</div>
+					<div class="select-drive-name">
+						<div class="inner-content">
+							<h2>Assign Customer Site</h2>
+							<!-- <div class="select-field">
+								<div ng-click="showSinglecustomer();"><span>{{singlecustomerValue}}</span></div>
+								<div class="CustomDropdown" ng-if="ss2">
+										<div class="panel panel-default">
+											<input type="text" class="form-control search_field" ng-model="searchTextsellcustomer" placeholder="Search" value="">
+											List group
+											<ul id="autolist" class="list-group">
+												<li class="list-group-item" ng-options="">
+													<div class="custom-radio">
+														<span>{{sellcustomer.name}}</span>
+														<input id="Singlecustomer{{$index}}" ng-change="singleChangeoncustomer(customerlist);" name="customerlist" ng-model="customerlist" type="radio" class="with-font" value="{{sellcustomer.name}}" />
+														<label for="Singlecustomer{{$index}}"></label>
+													</div>
+												</li>										
+											 </ul>
+										</div>
+									</div>
+			
+								</div> -->
+							<div class="form-field mr10 filter-group" style="width: 172px;">
+
+								<label class="select_label"> <span>Sell Customer</span>
+									<select class="select-field"
+									ng-options="destination.customerName for destination in sellCustomersForCustomerSelected|orderBy:'customerName'"
+									ng-model="popParams.destinatonSelectedinPopup"
+									ng-change="getDestinationSites();checkAssignDataPopupBtn();"">
+
+										<option value="">Select Sell Customer</option>
+								</select></label>
+							</div>
+
+							<!-- <div class="select-field">
+								<div ng-click="selectdestination();"><span>{{singledestinationValue}}</span></div>
+													<div class="CustomDropdown" ng-if="ss3">
+										<div class="panel panel-default">
+											<input type="text" class="form-control search_field" ng-model="searchTextselectdestination" placeholder="Search" value="">
+											List group
+											<ul id="autolist" class="list-group">
+												<li class="list-group-item" ng-repeat="selectdestination in selectdestinations | filter:searchTextselectdestination">
+													<div class="custom-radio">
+														<span>{{selectdestination.name}}</span>
+														<input id="selectdestination_id{{$index}}" ng-change="selectdestinationpart(destination);" name="destination" ng-model="destination" type="radio" class="with-font" value="{{selectdestination.name}}" />
+														<label for="selectdestination_id{{$index}}"></label>
+													</div>
+												</li>										
+											 </ul>
+										</div>
+									</div>
+								</div> -->
+
+
+
+							<div class="form-field mr10 filter-group assign-rightbtn"
+								style="width: 172px;">
+								<label class="select_label"><span>Sell Customer Site</span> <select
+									class="select-field"
+									ng-model="popParams.destinatonSiteSelectedinPopup"
+									ng-change="checkAssignDataPopupBtn()"
+									ng-options="destinationSite.siteName for destinationSite in destinationSitesForDestinationSelected">
+										<option value="">Select Customer Site</option>
+								</select></label>
+							</div>
+
+
+
+						</div>
+
+
+					</div>
+				</div>
+
+
+				<div class="modal-footer">
+									<button type="button" class="btn btn-widthfrequency btn-edit freqicon pad-frequtopbottom assignimg-width" title="Assign"
+						ng-click="updateFieldsForAssignActivity()"
+						ng-disabled="assignActivityPopupBtn">
+						<img src="/brta/app/resources/images/assign.png" alt="wrong path" title="Assign">
+						Assign Activity</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-----assign activity end------->
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+

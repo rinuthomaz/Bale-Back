@@ -1,0 +1,111 @@
+<div class="background-static"></div>
+<div class="ContentMainContainer">
+	<div class="custom_tab">
+		<div class="tab_heading">
+			<ul >
+			<li class="active">
+					<a href>Incident Management</a>
+			</li>
+			<!--<li ng-class="{ active: isSet(2) }">
+					<a href ng-click="setTab(2)">Assign Store</a>
+			</li>-->
+		</ul>
+		</div>
+		
+		<div class="tab-container">
+			<div class="tab_panel" ">
+				
+				<div class="filter-block">
+					<button type="button" class="btn btn_green" ng-click = "showaddincidenttype()" title="Add new incident">
+					<i class="fa fa-plus" aria-hidden="true"></i><!--<i class="fa fa-plus-circle" aria-hidden="true"></i>-->
+					Add New Incident </button>
+					<div class="form-field search-control" style="float: right;">
+					<input type="text" class="input-field search-field" ng-model="searchTextIncidentGrid" placeholder="Search" title="Search by Incident, Status">
+					<button class="btn-search" title="Search"><i class="fa fa-search" aria-hidden="true"></i></button>
+			 </div>
+				</div>
+
+					<div class="custom_table">
+						<table>
+							 <tr class="table_form form-field">
+									<th class="gridHeaderhgt">Incident</th>
+
+
+<th class="gridHeaderhgt">Status</th>
+<th class="gridHeaderhgt">Action</th>
+							 </tr>
+<tr class="table_form form-field textbox-height  tr_width" ng-show="addIncidentType">
+<form name ="addUserForm">
+<td><input type="text" placeholder="Incident Description" class="table_input input-field" ng-model = "incidentType.incidentDescription" required ng-blur = "checkIncidentUnique(incidentType.incidentDescription);last_name_error = false">
+<p ng-show="incident_des_error" class="error_msg" color="red">Incident Description is required</p>
+<p ng-show="incident_unique_error" class="error_msg" color="red" style="color:red" class="error">Incident description already exist.</p>
+
+</td>						
+
+<td><select class="table_select select-field selct-box-height " ng-model="incidentType.enabled"><option value="" >Please select</option>
+ <option>Inactive</option> 
+ <option>Active</option> </select>
+ </td>
+ </form>
+<td>
+                   <div class="form_submit" style="width:80px;">
+                     <button type="button" ng-click = "addIncidentTypeDetails(incidentType)"class="btn_image  save_btn">
+                       <img src="/brta/app/resources/images/save_btn.png">
+                     </button>
+                     <button type="button" ng-click = "addIncidentType=false" class="btn_image  close_btn">
+                       <img src="/brta/app/resources/images/close_btn.png">
+                     </button>
+                   </div>
+                   </td>
+
+	
+</tr>	
+<tr dir-paginate = "incidenttype in incidentTypes | filter:searchTextIncidentGrid  |itemsPerPage: 10" class="tr_width table_form textbox-height  form-field "pagination-id="incidenttable" >
+<td class="incidenttable-height height-reduce">
+<div ng-hide="editingData[incidenttype.incidentTypeId]">{{incidenttype.incidentDescription}}</div>
+<div ng-show="editingData[incidenttype.incidentTypeId]">
+<input type="text" class="table_input input-field"  ng-model="incidenttype.incidentDescription" ng-blur="checkIncidentUniqueForEdit(incidenttype.incidentDescription,incidenttype.incidentTypeId)"  required/>
+<p ng-show="incident_unique_error_{{incidenttype.incidentTypeId}}" class="error_msg" color="red" style="color:red" class="error">Incident description already exist.</p>
+<p ng-show="incident_des_error_{{incidenttype.incidentTypeId}}" class="error_msg" color="red">Incident Description is required</p>
+
+</div>
+</td>
+	
+<td class="incidenttable-height height-reduce"><div ng-hide="editingData[incidenttype.incidentTypeId]">{{incidenttype.enabled | filterStatus}}</div>	
+<div  ng-show="editingData[incidenttype.incidentTypeId]">
+<select class="table_select select-field selct-box-height" ng-model="incidenttype.enabled">
+ <option >Active</option>
+ <option >Inactive</option>
+</select>
+
+</div>
+</td>
+<td class="incidenttable-height height-reduce" style="text-align:center">
+<!--btn btn_green-->
+<button ng-hide="editingData[incidenttype.incidentTypeId]" type="button" title="Edit" class="btn btn_green inchgt edit-icon " ng-click = "modify(incidenttype)">
+<i class="fa fa-pencil"></i></button>
+
+<div ng-show ="editingData[incidenttype.incidentTypeId]" class="form_submit" style="width:80px;">
+                     <button type="button" ng-click = "editIncentiveTypeDetails(incidenttype)"class="btn_image  save_btn">
+                       <img src="/brta/app/resources/images/save_btn.png">
+                     </button>
+                     <button type="button" ng-click = "cancel(incidenttype)" class="btn_image  close_btn">
+                       <img src="/brta/app/resources/images/close_btn.png">
+                     </button>
+                   </div>
+
+</td>
+				 
+</tr>
+</table>
+					</div>
+					<div class="custom_pagination pagination_wrapper">
+				     <dir-pagination-controls pagination-id="incidenttable"   boundary-links="true"></dir-pagination-controls>
+				   </div>
+			</div>
+		<!--	<div class="tab_panel" ng-show="isSet(2)">
+				tab2
+			</div>-->
+		</div>
+	</div>
+</div>

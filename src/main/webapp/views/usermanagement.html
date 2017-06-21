@@ -1,0 +1,293 @@
+<div class="background-static"></div>
+<div class="ContentMainContainer">
+
+
+
+	<div class="custom_tab">
+	
+	
+		<div class="tab_heading">
+			<ul >
+			<li class="active">
+					<a href >{{getUserType()}}</a>
+			</li>
+			<!--<li ng-class="{ active: isSet(2) }">
+					<a href ng-click="setTab(2)">Assign Store</a>
+			</li>-->
+		</ul>
+		
+		
+		</div>
+		
+		
+		
+		<div class="tab-container">
+			<div class="tab_panel"">
+				<div class="filter-block">
+					<div class="form-field mr10">
+						<label class="select_label"><span>Select Supplier</span>
+						 <select class="select-field h56"  ng-model="supplierFilter"
+                          ng-options="supplier.supplierId as supplier.description for supplier in suppliers | orderBy:'description'"> 
+                        <option value="">Please select</option> 
+                        <option ng-repeat = "supplier in suppliers">{{supplier.description}}</option> 
+ 
+</select></label>
+					</div>
+					 <div class="form-field mr10">
+							<label class="select_label"><span>Status</span>
+							<select class="select-field h56" ng-model = "statusFilter" >
+							<option value="" selected="selected">Select Status</option>
+								 <option >Active</option>
+								 <option>Inactive</option>
+							</select></label>
+					 </div>
+					  <div  class="spinner-overlay" ng-show="loaderUserManagement" style="padding-bottom:20px">  
+                   <div class="loader-inner"> <i  class="fa fa-spin fa-circle-o-notch"></i> Loading ... </div></div>
+					 
+					
+										 <div class="form-field mr10 submiticon">
+	<button class="btn btn-field btn-green submit-btn go-btn iconcolor" title="Go" ng-click="getFilteredData(user)"><i class="fa fa-angle-right"></i></button>
+					 </div>
+					 <div class="form-field search-control" style="float: right;">
+							<input type="text" class="input-field search-field" ng-model="searchTextUserGrid" placeholder="Search" title="Search by Name, Email Address, Supplier Name, Mobile">
+							<button class="btn-search" title="Search"><i class="fa fa-search" aria-hidden="true"></i></button>
+					 </div>
+					 
+					 
+					 
+				</div>	
+				<div class="filter-block">
+
+					<div class="form-inline">
+
+					<button type="button" class="btn btn_green" ng-click = "showadduser()" title="Add New User"><i class="fa fa-plus" aria-hidden="true"></i>{{getUserType()}}</button>
+					
+						
+						<input type="file" name="file" class="form-control" accept=".xlsx"
+							onchange="angular.element(this).scope().uploadFile(this.files)" />
+
+						<button type="button" class="btn btn_green"
+							ng-click="ParseExcelDataAndSave()"
+							ng-disabled="!(selectedFileForUpload && supplierFilter)" title="upload">
+							<i class="fa fa-upload" aria-hidden="true"></i> Upload
+						</button>
+
+						<button type="button" class="btn btn_green"
+							ng-click="downloadSampleExcelForUser()">
+							<i class="fa fa-download" aria-hidden="true"></i> Sample
+						</button>
+
+						<span style="color: red">{{uploadExcelMessage}}</span>
+
+						</div>
+
+				</div>
+
+
+				
+				
+
+	<!--			 <div class="spinner-overlay" ng-show="loaderActiveUserMgmt" style="padding-bottom:20px">  
+                   <div class="loader-inner"> <i  class="fa fa-spin fa-circle-o-notch"></i> Loading... </div>
+					</div>-->
+				
+				
+
+					<div class="custom_table">
+					
+					
+					
+						<table>
+						
+						
+							 <tr class="table_form form-field">
+									<th>Last Name</th>
+<th>First Name</th>
+<th>Email Address</th>
+
+
+<th>Supplier Name</th>
+<th>Role</th>
+<th>Mobile</th>
+
+<th>Status</th>
+<th>Action</th>
+							 </tr>
+							 
+							 
+							 
+<tr class="table_form form-field tr_width textbox-height" ng-show="addUser" ng-form="myForm">
+
+
+
+<form name ="addUserForm" >
+<td><input type="text" placeholder="Last Name" class="table_input input-field" ng-model = "user.lastName" required ng-blur = "last_name_error = false">
+<p ng-show="last_name_error" class="error_msg" color="red">Lastname is required</p></td>						
+<td><input type="text" placeholder="First Name" class="table_input input-field" ng-model = "user.firstName" required ng-blur = "first_name_error = false">
+<p ng-show="first_name_error" class="error_msg" color="red">Firstname is required</p></td>
+<td>
+
+<input type="email" id="email" name="email" placeholder="Email Id" class="table_input input-field" ng-model = "user.emailId"  ng-blur = "checkUniqueEmail(user.emailId);email_unique_error=false;email_error = false"
+ng-pattern="/^[\w-]+(\.[\w-]+)*@([a-z0-9-]+(\.[a-z0-9-]+)*?\.[a-z]{2,6}|(\d{1,3}\.){3}\d{1,3})(:\d{4})?$/" noncapitalize required  >
+       
+    <div style="color: red" id="emailError"></div>
+    <!-- <span style="color:red;" class="email-error" ng-show="myForm.email.$error.required">Required</span> -->
+    <span style="color:red" class="error" ng-show="myForm.email.$error.pattern">Please enter a valid Email</span>
+
+<p ng-show="email_unique_error" class="error_msg" color="red" style="color:red" class="error">Email id already exist.</p>
+<p ng-show="email_error" color="red" class="error_msg">Email is required</p>
+</td>
+
+<!----<td><input type="text" placeholder="Service Provider Name" ng-model = "user.serviceProviderName"></td>-->
+<td><select class="table_select select-field selct-box-height" required ng-model="user.supplier.supplierId" ng-blur = "service_provider_error = false"
+ng-options="supplier.supplierId as supplier.description for supplier in suppliers | orderBy:'description'"> 
+<option value="" selected disabled>Please select</option> 
+<option ng-repeat = "supplier in suppliers">{{supplier.description}}</option> 
+ 
+</select><p ng-show="service_provider_error" class="error_msg" color="red">Service Provider is required</p></td></td>							 
+<td><input type="text" class="table_input input-field"    value = '{{typeUser()}}'  readonly="readonly"></td>							 
+<td><input limit-to="10" type="number" name="phone" class="table_input input-field"  onkeypress='return event.charCode >= 48 && event.charCode <= 57'  placeholder="Mobile Number" ng-minlength="10" ng-maxlength="10" ng-model = "user.mobilePhone" ng-blur="checkUniqueMobileNo(user.mobilePhone);mobile_number_error=false;mobile_number_unique_error=false"  ng-required="true">
+
+
+    <span style="color:red" class="error" ng-show=" 
+                           myForm.phone.$error.number">Valid phone number is required</span>
+
+	    <span style="color:red" class="error" ng-show="((myForm.phone.$error.minlength ||
+                           myForm.phone.$error.maxlength) && 
+                           myForm.phone.$dirty)">phone number should be 10 digits</span>
+
+	
+
+<p ng-show="mobile_number_error" class="error_msg" color="red">Please enter a valid mobile number</p>
+<p ng-show="mobile_number_unique_error" class="error_msg" color="red" style="color:red" class="error">Mobile number already exist.</p>
+
+</td>
+
+<td><select class="table_select select-field selct-box-height" ng-model="user.enabled"><option  selected="selected">Active</option>
+ <option>Inactive</option> 
+ </select></td>
+ </form>
+<td>
+                   <div class="form_submit" style="width:80px;">
+                     <button type="button" ng-click = "addUserDetails(user)"class="btn_image  save_btn">
+                       <img src="/brta/app/resources/images/save_btn.png">
+                     </button>
+                     <button type="button" ng-click = "addUser=false" class="btn_image  close_btn">
+                       <img src="/brta/app/resources/images/close_btn.png">
+                     </button>
+                   </div>
+                   </td>
+
+	
+</tr>	
+
+<tr dir-paginate = "user in users | filter:searchTextUserGrid | itemsPerPage: 10" class="table_form form-field tr_width textbox-height" pagination-id="usertable" ng-form="myEditForm">
+
+<td>
+<div ng-hide="editingData[user.userId]">{{user.lastName}}</div>
+<div ng-show="editingData[user.userId]"><input type="text" class="table_input input-field"  ng-model="user.lastName" ng-blur = "setDefaultValueFalse('last_name_edit_error' ,user.userId) "/>
+<p ng-show="last_name_edit_error_{{user.userId}}" color="red" class="error_msg">Please enter a valid last name</p>
+
+</div>
+
+</td>
+<td>
+<div ng-hide="editingData[user.userId]">{{user.firstName}}</div>
+<div ng-show="editingData[user.userId]"><input type="text" class="table_input input-field"  ng-model="user.firstName" ng-blur = "setDefaultValueFalse('first_name_edit_error' ,user.userId) "/>
+<p ng-show="first_name_edit_error_{{user.userId}}" color="red" class="error_msg">Please enter a valid first name</p>
+</div>
+</td>
+<td >
+
+<div ng-hide="editingData[user.userId]">{{user.emailId}}</div>
+<div ng-show="editingData[user.userId]" >
+
+<input type="email" id="email" name="email" placeholder="Email Id" class="table_input input-field" ng-model = "user.emailId"  ng-blur="checkUniqueEmailIdForEdit(user.emailId,user);setDefaultValueFalse('email_edit_error' ,user.userId);setDefaultValueFalse('email_unique_error' ,user.userId)"
+ng-pattern="/^[\w-]+(\.[\w-]+)*@([a-z0-9-]+(\.[a-z0-9-]+)*?\.[a-z]{2,6}|(\d{1,3}\.){3}\d{1,3})(:\d{4})?$/" noncapitalize required  >
+      
+    <div style="color: red" id="emailError"></div>
+    <!-- <span style="color:red;" class="email-error" ng-show="myEditForm.email.$error.required">Required</span> -->
+    <span style="color:red" class="error" ng-show="myEditForm.email.$error.pattern">Please enter a valid Email</span>
+	<p ng-show="email_edit_error_{{user.userId}}" color="red" class="error_msg">Please enter a valid Email</p>
+	<p ng-show="email_unique_error_{{user.userId}}" class="error_msg" color="red" style="color:red" class="error">Email id already exist</p>
+
+</div>
+</td>
+
+
+
+
+
+</td>
+
+<td>
+<div ng-hide="editingData[user.userId]">{{user.supplier.description}}</div>
+<div ng-show="editingData[user.userId]"><select class="table_select select-field selct-box-height" ng-model="user.supplier.supplierId" 
+ng-options="supplier.supplierId as supplier.description for supplier in suppliers | orderBy:'description'" ng-blur="setDefaultValueFalse('edit_service_provider_error' ,user.userId) "> 
+
+</select>
+
+
+
+<p ng-show="edit_service_provider_error_{{user.userId}}" color="red" class="error_msg">Please select a service provider</p>
+
+
+</div>
+</td>	
+<td>{{typeUser()}}</td>	
+<td>
+<div ng-hide="editingData[user.userId]">{{user.mobilePhone}}</div>
+<div ng-show="editingData[user.userId]">
+<input  type="text" limit-to="10" name="phone" class="table_input input-field"  onkeypress='return event.charCode >= 48 && event.charCode <= 57'  placeholder="Mobile Number" ng-minlength="10" ng-maxlength="10" ng-model = "user.mobilePhone" ng-blur="checkUniqueMobileNoForEdit(user.mobilePhone, user);setDefaultValueFalse('edit_mobile_error',user.userId);setDefaultValueFalse('mobile_number_unique_error',user.userId)"  ng-required="true">
+
+  <span style="color:red" class="error" ng-show=" 
+                           myEditForm.phone.$error.number">Valid phone number is required</span>
+
+	    <span style="color:red" class="error" ng-show="((myEditForm.phone.$error.minlength ||
+                           myEditForm.phone.$error.maxlength) && 
+                           myEditForm.phone.$dirty)">phone number should be 10 digits</span>
+						   
+	<p ng-show="edit_mobile_error_{{user.userId}}" color="red" class="error_msg">Please enter a valid mobile number</p>
+<p ng-show="mobile_number_unique_error_{{user.userId}}" class="error_msg" color="red" style="color:red" class="error">Mobile number already exist.</p>
+
+
+	
+</div>
+</td>	
+<td><div ng-hide="editingData[user.userId]">{{user.enabled | filterStatus}}</div>	
+<div  ng-show="editingData[user.userId]">
+<select class="table_select select-field selct-box-height" ng-model="user.enabled">
+
+  <option selected="selected">{{user.enabled}}</option>
+ <option ng-if="user.enabled=='Inactive'">Active</option>
+ <option ng-if="user.enabled=='Active'">Inactive</option>
+ 
+</select>
+
+</div>
+</td>
+<td><button ng-hide="editingData[user.userId]" type="button" class="btn btn_green inchgt edit-icon" ng-click = "modify(user)"><i class="fa fa-pencil"></i></button>
+<div ng-show ="editingData[user.userId]" class="form_submit" style="width:80px;">
+                     <button type="button" ng-click = "editUserDetails(user)"class="btn_image  save_btn">
+                       <img src="/brta/app/resources/images/save_btn.png">
+                     </button>
+                     <button type="button" ng-click = "cancel(user)" class="btn_image  close_btn">
+                       <img src="/brta/app/resources/images/close_btn.png">
+                     </button>
+                   </div>
+
+</td>
+				 
+</tr>
+</table>
+					</div>
+					<div class="custom_pagination pagination_wrapper">
+				     <dir-pagination-controls pagination-id="usertable"   boundary-links="true"></dir-pagination-controls>
+				   </div>
+			</div></div>
+		<!--	<div class="tab_panel" ng-show="isSet(2)">
+				tab2
+			</div>-->
+		</div>
+	</div>
+</div>
